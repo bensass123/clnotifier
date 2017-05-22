@@ -11,18 +11,33 @@ var users = require('./routes/users');
 
 var app = express();
 
-// stormpath
-app.use(stormpath.init(app, { website: true }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
 
 // mongo uri
 // mongodb://heroku_tqnglw2f:1d0k7f8k4fd84oa9i6ch35f19i@ds149511.mlab.com:49511/heroku_tqnglw2f
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+// stormpath use
+app.use(stormpath.init(app, { 
+  website: true,
+  web: {
+      me: {
+        expand: {
+          customData: true
+        }
+      },
+      login: {
+        nextUri: '/'
+      }
+    } 
+}));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,5 +64,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
