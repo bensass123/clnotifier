@@ -12,7 +12,7 @@ var send = require('gmail-send')({
   // from:   '"User" <user@gmail.com>'  // from: by default equals to user 
   // replyTo:'user@gmail.com'           // replyTo: by default undefined 
   subject: 'test subject',
-  text:    d
+  text:    'tester'
   // html:    '<b>html text text</b>' 
 });
 
