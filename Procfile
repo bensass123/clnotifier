@@ -1,1 +1,1 @@
-worker: node bin/tester.js
+worker: node bin/email.js
