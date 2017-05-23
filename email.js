@@ -14,8 +14,11 @@ var send = require('gmail-send')({
   // html:    '<b>html text text</b>' 
 });
 
-send({
-    subject: 'your search of hondas found 1 new honda'
-}, function (err, res) {
-    console.log('err:', err, '; res:', res);
-})
+// send({
+//     subject: 'your search of hondas found 1 new honda'
+// }, function (err, res) {
+//     console.log('err:', err, '; res:', res);
+// })
+
+
+

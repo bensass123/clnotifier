@@ -1,8 +1,64 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
+  background: #FFCEBB;
+}
+.title {
+  font-size: 3vh;
+  color: white;
+  font-family: Verdana, Geneva, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.jumbotron {
+  background: #7A9EAF;
+}
+
+
+.navbar {
+  background: #655989;
+  color: white;
+}
+
+.navbar-default .navbar-nav>li>a{
+  color: white;
+}
+
+.dnd {
+  position: relative;
+    left: 20px;
+}
+
+.shrinkDiv {
+-webkit-transform:scale(0.75);
+-moz-transform:scale(0.75);
+-ms-transform:scale(0.75);
+transform:scale(0.75);
+transform-origin: 0 0;
+}
+
+.addnotification>label
+{
+ font-size: 1.8vh;
+ margin: 0;
+}
+
+.addnotification>input
+{
+ font-size: 1.8vh;
+}
+
+.addnotification>select
+{
+ font-size: 1.8vh;
+}
+
+#addbutton {
+  margin-top: 20px;
+}
+
+#top {
+  margin: 0;
+}
+
+.btn-primary {
+  background: #765A60;
 }

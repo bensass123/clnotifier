@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Craigslist Notifier v1.0</title>
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--favicon-->
+    <!--<link rel="icon" href="/favicon.ico" />-->
+
+    <!--clockpicker plugin css-->
+    <link href="stylesheets/clockpicker/bootstrap-clockpicker.min.css" rel="stylesheet">
+
+    <!--custom style.css-->
+    <link href="stylesheets/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header title">
+                <span class='glyphicon glyphicon-phone-alt'></span>  Craigslist Notifier
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class='glyphicon glyphicon-hand-down '></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Recent Notifications Sent</a></li>
+
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#"><button id='logout'>Logout</button></a></li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+
+    <!--jumbotron-->
+    <div id='top'>
+
+        <div id='welcome' class='container-fluid'>
+            <div class='jumbotron'>
+                <h1>Welcome, <span id='welcomename'></span></h1> 
+            </div>
+        </div>
+    </div>
+
+    <div id='main' class='col-md-offset-1 col-md-8 col-xs-12'>
+        
+        <div id='currentNotifications'>
+             <!--display all notifications that have been setup for user-->
+        </div>
+        <div id='addbutton'>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addModal">
+            Add new notification
+            </button>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addModalLabel">Create new notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div id ='addNotifications' class='container-fluid'>
+                        <form id='addform' action='/addNotification' method='post'>
+                            <div class='col-md-12 col-xs-12'>
+
+                                <div class="input-group clockpicker addnotification">
+                                    <label for="dndEnd">End of Do Not Disturb Time</label>
+                                    <input type="text" class="form-control  form-control-sm" value="07:00" id="dndEnd" name='dndEnd' aria-describedby="dndEndHelp">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                    <small id="dndEndHelp" class="form-text text-muted dnd">The time each day that you would like to turn ON notifications.</small>
+                                </div>
+
+                                <div class="input-group clockpicker addnotification">
+                                    <label for="dndStart">Start of Do Not Disturb Time</label>
+                                    <input type="text" class="form-control  form-control-sm" value="23:45" id="dndStart" name='dndStart' aria-describedby="dndStartHelp">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                    <small id="dndStartHelp" class="form-text text-muted dnd">The time each day that you would like to turn OFF notifications.</small>
+                                </div>
+
+                                
+                                
+                                <div class="form-group addnotification">
+                                    <label for="type">Select search category</label>
+                                    <select class="form-control  form-control-sm" id="category" name='category'>
+                                        <option>Cars</option>
+                                        <option>Boats</option>
+                                        <option>Bikes</option>
+                                        <option>Free Stuff</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group addnotification">
+                                    <label for="terms">Search terms</label>
+                                    <input type="text" class="form-control  form-control-sm" id="terms" name='terms' aria-describedby="termsHelp" placeholder="Enter search terms">
+                                    <small id="termsHelp" class="form-text text-muted">Enter your search terms separated by spaces.</small>
+                                </div>
+
+                                <div class="form-group addnotification">
+                                    <label for="pLow">Price (min)</label>
+                                    <input type="text" class="form-control  form-control-sm" id="pLow" name='pLow' aria-describedby="pLowHelp" placeholder="Enter price (minimum)">
+                                    <small id="pLowHelp" class="form-text text-muted">Leave blank to keep min price at 0.</small>
+                                </div>
+
+                                <div class="form-group addnotification">
+                                    <label for="pHigh">Price (max)</label>
+                                    <input type="text" class="form-control  form-control-sm" id="pHigh" name='pHigh' aria-describedby="pHighHelp" placeholder="Enter price (maximum)">
+                                    <small id="pHighHelp" class="form-text text-muted">Leave blank for no max price.</small>
+                                </div>
+
+                                <div class="form-group addnotification">
+                                    <label for="yrEarly">Year (earliest)</label>
+                                    <input type="text" class="form-control  form-control-sm" id="yrEarly" name='yrEarly' aria-describedby="yrEarlyHelp" placeholder="Enter model year (earliest)">
+                                    <small id="yrEarlyHelp" class="form-text text-muted">Leave blank for no minimum model year.</small>
+                                </div>
+
+                                <div class="form-group addnotification">
+                                    <label for="yrLate">Year (latest)</label>
+                                    <input type="text" class="form-control  form-control-sm" id="yrLate" name='yrLate' aria-describedby="yrLateHelp" placeholder="Enter model year (latest)">
+                                    <small id="yrLateHelp" class="form-text text-muted">Leave blank for no maximum model year.</small>
+                                </div>
+
+                                
+
+
+
+                                <div class='col-md-offset-5 col-md-2 col-xs-offset-5 col-xs-2'>
+                                    <input type="submit" class="btn btn-primary" id='addbutton'></input>
+                                </div>
+                        </form>
+                </div>
+    </div>
+
+
+        
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+    <!--clockpicker plugin js-->
+    <script src="javascripts/clockpicker/bootstrap-clockpicker.min.js"></script>
+
+    <!--jquery visibilty checker plugin (jquery-visible)-->
+    <script src="javascripts/jqueryVisible/jquery.visible.min.js"></script>
+
+    <!--custom js-->
+    <script src="javascripts/userfrontend.js"></script>
+
+</body>
+
+</html>
