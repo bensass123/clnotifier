@@ -1,5 +1,7 @@
 // test scheduled task ability to call db
 
+console.log('start test.js')
+
 var mongoose = require('mongoose');
 var User = require('../models/User')
 
