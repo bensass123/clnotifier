@@ -1,1 +1,1 @@
-worker: node tester.js
+worker: node bin/tester.js
