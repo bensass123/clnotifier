@@ -86,18 +86,13 @@ var address = (obj) => {
 }
 
 
-
+// runs search, updates db with founds, if text send is successful then updates doc with sent: true
 var searchCl = (obj, url) => {
-    // found objects
-    var founds = [];
-
+    // request promise
     rp(url).then(function (html) {
 	    var $ = cheerio.load(html);
-	    // console.log(url);
 
 	    var results = $('a.result-title');
-	    // console.log('results:  ***********');
-	    // console.log(results);
 	    for (var i = 0; i < results.length; i++) {
 
 	    	var link = results[i]['attribs'].href;
@@ -110,7 +105,6 @@ var searchCl = (obj, url) => {
                 link = 'https://charlotte.craigslist.org' + link;
             }
             
-
             var found = {
                 link: link,
                 title: title,
@@ -120,43 +114,42 @@ var searchCl = (obj, url) => {
                 deleted: false
             }
 
-            founds.push(found);
             console.log(obj.email, found.link, found.title);
-
-
 
             SearchFound.update({email: found.email, link: found.link, title: found.title}, found, {upsert:true}, function (err, doc){
                 if (err) console.log(err);
                 console.log('search found and added')
                 console.log(doc);
-                SearchFound.find({}, (err, docs) =>{
-                    if (err) console.log(err);
-                     // sending out text notifications here
-                    docs.forEach((elem, i) =>{
-                        if (!elem.sent) {
-                            Send({
-                                subject: elem.title,
-                                text: 'Your search produced the following result ' +  elem.link,
-                                to: address(elem)
-                            }, function (err, res) {
-                                    if (err) {
-                                        console.log(err)
-                                    }
-                                    else {
-                                        
-                                        // code to update sent to true
-                                        SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
-                                            if (err) console.log(err);
-                                                console.log('updated ' + elem.title + ' to sent' )
-                                                console.log(doc);
-                                        })
-
-                                    }
-                            })
-                        }
-                     })     
-                })
             })
-        } 
+        }
+        // end for loop
+
+        // sending out text notifications here
+        SearchFound.find({}, (err, docs) =>{
+            if (err) console.log(err);
+            docs.forEach((elem, i) =>{
+                if (!elem.sent) {
+                    Send({
+                        subject: elem.title,
+                        text: 'Your search produced the following result ' +  elem.link,
+                        to: address(elem)
+                    }, function (err, res) {
+                            if (err) {
+                                console.log(err)
+                            }
+                            else {
+                                console.log('text sent to ' + elem.email);
+                                // code to update sent to true
+                                SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
+                                    if (err) console.log(err);
+                                        console.log('updated ' + elem.title + ' to sent' )
+                                        console.log(doc);
+                                })
+                            }
+                    })
+                }
+            })    
+            // end foreach 
+        })
     })
 }
