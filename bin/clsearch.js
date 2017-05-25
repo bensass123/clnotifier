@@ -145,11 +145,11 @@ var searchCl = (obj, url) => {
                                     else {
                                         
                                         // code to update sent to true
-                                        // SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
-                                        //     if (err) console.log(err);
-                                        //         console.log('updated ' + elem.title + ' to sent' )
-                                        //         console.log(doc);
-                                        // })
+                                        SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
+                                            if (err) console.log(err);
+                                                console.log('updated ' + elem.title + ' to sent' )
+                                                console.log(doc);
+                                        })
 
                                     }
                             })
@@ -157,12 +157,6 @@ var searchCl = (obj, url) => {
                      })     
                 })
             })
-        }
-
-         
-
-                
-        
+        } 
     })
-
 }
