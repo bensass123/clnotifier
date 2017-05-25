@@ -117,13 +117,14 @@ var searchCl = (obj, url) => {
                 email: obj.email,
                 phone: obj.phone,
                 carrier: obj.carrier,
-                deleted: false,
-                givenName: obj.givenName,
-                sent: false
+                deleted: false
             }
 
             founds.push(found);
-            console.log(obj.email, found.link, found.title)
+            console.log(obj.email, found.link, found.title);
+
+
+
             SearchFound.update({email: found.email, link: found.link, title: found.title}, found, {upsert:true}, function (err, doc){
                 if (err) console.log(err);
                 console.log('search found and added')
