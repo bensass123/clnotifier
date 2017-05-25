@@ -1,1 +1,1 @@
-worker: node bin/email.js
+worker: node bin/clsearch.js

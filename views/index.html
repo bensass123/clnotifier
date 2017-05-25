@@ -25,6 +25,40 @@
 
     <!--custom style.css-->
     <link href="stylesheets/style.css" rel="stylesheet">
+
+
+    <script id="notificationTemplate" type="text/x-handlebars-template">
+        {{#each notifications}}
+            <div class="panel panel-primary notifications">
+                <div class="panel-heading">{{ category }}</div>
+                <div class="panel-body">
+                    <table>
+                        <tr><td> Category:</td>      <td>{{ category }} </td></tr>
+                        <tr><td> Search:</td>  <td>{{ terms }} </td></tr>
+                        <tr><td> Price:</td>         <td>{{ pLow }} - {{ pHigh }}</td></tr>
+                        <tr><td> Year range:</td>    <td>{{ yrEarly }} - {{ yrLate }}</td></tr>
+                    </table>
+                    <button id='delButton' data-terms= {{ terms }}  data-pLow = {{pLow}}  data-pHigh = {{ pHigh }} onClick="deleteNotification('{{ terms }}', '{{pLow}}', '{{pHigh}}')">DELETE</button>                   
+                </div>
+            </div>
+        {{/each}}
+    </script>
+
+    <script id="foundTemplate" type="text/x-handlebars-template">
+        {{#each this}}
+            <div class="panel panel-primary notifications">
+                <div class="panel-heading">Succesfully Found:</div>
+                <div class="panel-body">
+                    <table>
+                        <tr><td> Link:</td></tr><tr>      <td><a href='{{ link }}'> {{ link }} </td></tr>
+                        <tr><td> Title:</td></tr><tr>  <td>{{ title }} </td></tr>
+                    </table>
+                    <button id='delFoundButton' onClick="deleteFound('{{ link }}', '{{title}}')">DELETE</button>                   
+                </div>
+            </div>
+        {{/each}}
+    </script>
+
 </head>
 
 <body>
@@ -61,11 +95,9 @@
         </div>
     </div>
 
-    <div id='main' class='col-md-offset-1 col-md-8 col-xs-12'>
+    <div id='main'>
+      <div class='col-md-offset-1 col-md-5 col-xs-12'>
         
-        <div id='currentNotifications'>
-             <!--display all notifications that have been setup for user-->
-        </div>
         <div id='addbutton'>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addModal">
@@ -73,13 +105,35 @@
             </button>
 
         </div>
+      </div>
+
+      <div class='container-fluid'>
+            <div class='col-md-5 col-xs-12'>
+                <div class="panel panel-primary notifications">
+                    <div class="panel-heading">Notifications</div>
+                    <div class="panel-body">
+                            <div id='notificationList'></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='col-md-5 col-xs-12'>
+                <div class="panel panel-primary notifications">
+                        <div class="panel-heading">Found</div>
+                        <div class="panel-body">
+                                <div id='foundList'></div>
+                    
+                        </div>
+                    </div>
+            </div>
+      </div>
 
         <!-- Modal -->
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" id='closeModalButton' class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="addModalLabel">Create new notification</h4>
                 </div>
                 <div class="modal-body">
@@ -150,12 +204,13 @@
                                 
 
 
-
-                                <div class='col-md-offset-5 col-md-2 col-xs-offset-5 col-xs-2'>
-                                    <input type="submit" class="btn btn-primary" id='addbutton'></input>
-                                </div>
                         </form>
-                </div>
+                                <div class='col-md-offset-5 col-md-2 col-xs-offset-5 col-xs-2'>
+                                    <input type="button" class="btn btn-primary" id='submitbutton' value = 'Submit'></input>
+                                </div>
+                        
+                
+            </div>
     </div>
 
 
@@ -173,6 +228,9 @@
 
     <!--jquery visibilty checker plugin (jquery-visible)-->
     <script src="javascripts/jqueryVisible/jquery.visible.min.js"></script>
+
+    <!--Handlebars-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 
     <!--custom js-->
     <script src="javascripts/userfrontend.js"></script>

@@ -1,31 +1,17 @@
  
- var User = require('../models/User.js');
- 
+  var User = require('../models/User.js');
+  var Notification = require('../models/Notification.js');
+
  module.exports = {
     addUser: (user) => {
 
             var p = user.customData.phone.trim();
             var c = user.customData.carrier;
-            var arr = user.customData.notifications;
-            console.log(user);
-            console.log(arr);
-            // console.log(p);
-            // console.log(c);
+
+            console.log(p);
+            console.log(c);
             console.log('init user');
             
-            // var notifications = [];
-            // if(!user.customData.notifications) {
-            //     notifications = [];
-            // }
-            // else{
-            //     notifications = user.customData.notifications;
-            // }
-
-            if(!arr) {
-                arr = [];
-                console.log('no notifications array in customdata')
-            }
-
             var obj = {
                 firstName: user.givenName,
                 lastName: user.surname,
@@ -41,7 +27,7 @@
             })
         },
 
-        addNotification: (body, user) => {
+    addNotification: (body, user) => {
             console.log('helpers:');
             console.log('body');
             console.log(body);
@@ -49,16 +35,18 @@
             console.log(user);
             var category = body.category;
             var terms =  body.terms;
-            var pLow = body.pLow;
-            var pHigh = body.pHigh;
+            var pLow = body.pLow || 'na';
+            var pHigh = body.pHigh || 'na';
             var yrEarly = body.yrEarly || 'na';
             var yrLate = body.yrLate || 'na';
+
             // do not disturb times
             var dndStart = body.dndStart;
             var dndEnd = body.dndEnd;
-            // var p = user.phone;
-            // var c = user.carrier;
-            // var n = user.firstName;
+
+            // phone and carrier
+            var p = user.customData.phone.trim();
+            var c = user.customData.carrier;
 
             // create object to represent notification
             var obj = {
@@ -69,12 +57,21 @@
                 yrEarly: yrEarly,
                 yrLate: yrLate,
                 dndStart: dndStart,
-                dndEnd: dndEnd
+                dndEnd: dndEnd,
+                email: user.email,
+                phone: p,
+                carrier: c
             }
 
-            return User.update({email: user.email},  { $addToSet: { notifications: obj } }, (err, doc) => {
+            var a1 = User.update({email: user.email},  { $addToSet: { notifications: obj } }, (err, doc) => {
                 if (err) {console.log(err);}
                 else {console.log(doc);}
-            })
+            });
+
+            var a2 = Notification.create(obj, function (err, doc){
+                if (err) return handleError(err);
+                console.log('---------------NOTIFICATION DOC CREATION----', doc)
+            });
+            return a1 && a2;
         }
 }

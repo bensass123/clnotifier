@@ -4,14 +4,38 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var NotificationSchema = new Schema({
-    sentTo: {
+    category: {
         type: String
     },
-    link: {
+    terms: {
         type: String
     },
-    timeSent: {
-        type: Date
+    pLow: {
+        type: String
+    },
+    pHigh: {
+        type: String
+    },
+    yrEarly: {
+        type: String
+    },
+    yrLate: {
+        type: String
+    },
+    dndStart: {
+        type: String
+    },
+    dndEnd: {
+        type: String
+    },
+    phone: {
+        type: String
+    },
+    carrier: {
+        type: String
+    },
+    email: {
+        type: String
     }
 })
 

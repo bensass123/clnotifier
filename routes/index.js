@@ -3,6 +3,7 @@ var router = express.Router();
 var path = require('path');
 var stormpath = require('express-stormpath');
 var User = require('../models/User.js');
+var SearchFound = require('../models/SearchFound.js');
 var Notification = require('../models/Notification.js');
 
 var helpers = require('./helpers');
@@ -36,8 +37,47 @@ router.get('/notifications', stormpath.loginRequired, function(req, res, next) {
         res.send(obj);
     }
   });
+})
 
-  // this route will return the array of notifications for the user
+router.get('/founds', stormpath.loginRequired, function(req, res, next) {
+  console.log('get route notifications, email: ');
+  console.log(req.user.email);
+  SearchFound.find({email: req.user.email, deleted: false}, function (err, docs) {
+    if (err) {
+        return handleError(err)
+    }
+    else {
+        res.send(docs);
+    }
+  });
+})
+
+router.get('/allfounds', stormpath.loginRequired, function(req, res, next) {
+  console.log('get route notifications, email: ');
+  console.log(req.user.email);
+  SearchFound.find({email: req.user.email}, function (err, docs) {
+    if (err) {
+        return handleError(err)
+    }
+    else {
+
+        res.send(docs);
+    }
+  });
+})
+
+router.get('/deletedfounds', stormpath.loginRequired, function(req, res, next) {
+  console.log('get route notifications, email: ');
+  console.log(req.user.email);
+  SearchFound.find({email: req.user.email, deleted: true}, function (err, docs) {
+    if (err) {
+        return handleError(err)
+    }
+    else {
+
+        res.send(docs);
+    }
+  });
 })
 
 router.post('/addNotification', stormpath.loginRequired, function(req, res, next) {
@@ -47,18 +87,52 @@ router.post('/addNotification', stormpath.loginRequired, function(req, res, next
 
   helpers.addNotification(req.body, req.user);
 
-  res.send(req.body);
+  res.end();
   
 });
 
-router.post('/inituser', stormpath.loginRequired, function(req, res, next) {
-  if (!req.user.customData.notifications){
-    req.user.customData.notifications = [];
-    req.user.customData.save();
-  }
+router.post('/deleteNotification', stormpath.loginRequired, function(req, res, next) {
+  // find based on terms plow and phigh
+  User.update({email: req.user.email}, { $pull: { notifications: { terms: req.body.terms, pLow: req.body.pLow, pHigh: req.body.pHigh } } }, function(err, newdoc) {
+      // Send any errors to the browser
+      if (err) {
+        res.send(err);
+      }
+      // Or send the newdoc to the browser
+      else {
+        console.log(newdoc);
+        // also remove from note model
+        Notification.remove({ email: req.user.email, terms: req.body.terms, pLow: req.body.pLow, pHigh: req.body.pHigh }, function(err, newdoc) {
+          if (err) return handleError(err);
+          console.log(newdoc);
+          res.end();
+        })
+      }
+  });
+})
 
+
+
+router.post('/deleteFound', stormpath.loginRequired, function(req, res, next) {
+  SearchFound.update({email: req.user.email, link: req.body.link, title: req.body.title }, { $set: { deleted: true } }, function(err, newdoc) {
+            if (err) return handleError(err);
+            console.log(newdoc);
+            res.end();
+  });
+})
+
+// this will be linked to a button under the users pereviously delted searches
+
+router.post('/undeleteFound', stormpath.loginRequired, function(req, res, next) {
+  SearchFound.update({email: req.user.email, link: req.body.link, title: req.body.title }, { $set: { deleted: false } }, function(err, newdoc) {
+            if (err) return handleError(err);
+            console.log(newdoc);
+            res.end();
+  });
+})
+
+router.post('/inituser', stormpath.loginRequired, function(req, res, next) {
   helpers.addUser(req.user);
-  
   res.end();
 });
 

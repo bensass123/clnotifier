@@ -12,6 +12,10 @@ body {
   background: #7A9EAF;
 }
 
+.panel-primary>.panel-heading {
+  background: #7A9EAF;
+}
+
 
 .navbar {
   background: #655989;
