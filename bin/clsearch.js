@@ -129,34 +129,37 @@ var searchCl = (obj, url) => {
                 if (err) console.log(err);
                 console.log('search found and added')
                 console.log(doc);
+                SearchFound.find({}, (err, docs) =>{
+                    if (err) console.log(err);
+                     // sending out text notifications here
+                    docs.forEach((elem, i) =>{
+                        if (!elem.sent) {
+                            Send({
+                                subject: elem.title,
+                                text: 'Your search produced the following result ' +  elem.link,
+                                to: address(elem)
+                            }, function (err, res) {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    else {
+                                        
+                                        // code to update sent to true
+                                        // SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
+                                        //     if (err) console.log(err);
+                                        //         console.log('updated ' + elem.title + ' to sent' )
+                                        //         console.log(doc);
+                                        // })
+
+                                    }
+                            })
+                        }
+                     })     
+                })
             })
         }
 
-         // sending out text notifications here
-          founds.forEach((elem, i) =>{
-            if (!elem.sent) {
-                Send({
-                    subject: elem.title,
-                    text: 'Your search produced the following result ' +  elem.link,
-                    to: address(elem)
-                }, function (err, res) {
-                        if (err) {
-                            console.log(err)
-                        }
-                        else {
-                            
-                            // code to update sent to true
-                            SearchFound.update({email: elem.email, link: elem.link, title: elem.title}, {$set: {sent: true}}, function (err, doc){
-                                if (err) console.log(err);
-                                    console.log('updated ' + elem.title + ' to sent' )
-                                    console.log(doc);
-                            })
-
-                        }
-                })
-            }
-            
-          })      
+         
 
                 
         
