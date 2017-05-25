@@ -20,6 +20,10 @@ var Send = require('gmail-send')({
 // globals
 var notifications;
 
+// time of day stuff - todo - need to account for diff time zones
+// var date = new Date();
+// var current_hour = date.getHours();
+
 // mongoose connection string
 mongoose.connect("mongodb://heroku_tqnglw2f:1d0k7f8k4fd84oa9i6ch35f19i@ds149511.mlab.com:49511/heroku_tqnglw2f");
 var db = mongoose.connection;
@@ -124,7 +128,7 @@ var searchCl = (obj, url) => {
         }
         // end for loop
 
-        // sending out text notifications here
+        // sending out text notifications and updating sent property to true here
         SearchFound.find({}, (err, docs) =>{
             if (err) console.log(err);
             docs.forEach((elem, i) =>{

@@ -61,7 +61,7 @@ app.use('/users', users);
 
 app.use(stormpath.init(app, {
     preRegistrationHandler: function (formData, req, res, next) {
-      var c = formData.carrier.toLowerCase();
+      var c = formData.carrier.toLowerCase().trim();
       var p = formData.phone;
       var legit = ((c === 'att') || (c === 'at&t') || (c === 'metropcs') || (c === 'verizon') || (c === 'cricket') || (c === 'tmobile') || (c === 't-mobile') || (c === 'sprint'));
       if (!legit) {
