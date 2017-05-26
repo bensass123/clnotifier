@@ -135,7 +135,7 @@ var searchCl = (obj, url) => {
                 if (!elem.sent) {
                     Send({
                         subject: elem.title,
-                        text: 'Your search produced the following result ' +  elem.link,
+                        text: 'Craigslist Notifier found results for your query! Please visit the site to see them. Unfortunately we cannot send links thru email due to gmail\'s spam filter.',
                         to: address(elem)
                     }, function (err, res) {
                             if (err) {
